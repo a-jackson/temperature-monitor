@@ -8,6 +8,7 @@
     "test": "nyc --clean --all --require ts-node/register --require reflect-metadata/Reflect --extension .ts -- mocha --exit --timeout 5000",
     "test:all": "npm test **/*.spec.ts",
     "start": "ts-node src/bootstrap.ts",
+    "startmock": "npm run prestart; ts-node src/bootstrap.ts --mock",
     "lint": "tslint --project tsconfig.json --config tslint.json --fix",
     "pretty": "prettier --write src/**/*.ts",
     "prestart": "npm run lint;npm run pretty"
@@ -21,7 +22,8 @@
     "inversify-express-utils": "6.2.0",
     "inversify-logger-middleware": "3.1.0",
     "morgan": "1.9.1",
-    "reflect-metadata": "0.1.12"
+    "reflect-metadata": "0.1.12",
+    "w1temp": "^4.4.0"
   },
   "devDependencies": {
     "@types/bluebird": "3.5.25",
