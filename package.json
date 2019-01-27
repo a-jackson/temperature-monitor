@@ -9,7 +9,8 @@
     "startmock": "npm run prestart; ts-node src/index.ts --mock",
     "lint": "tslint --project tsconfig.json --config tslint.json --fix",
     "pretty": "prettier --write src/**/*.ts",
-    "prestart": "npm run lint;npm run pretty"
+    "prestart": "npm run lint;npm run pretty",
+    "build": "rm -rf dist && tsc && gulp"
   },
   "dependencies": {
     "w1temp": "^4.4.0"
@@ -18,9 +19,11 @@
     "@types/bluebird": "3.5.25",
     "@types/events": "^3.0.0",
     "@types/node": "^10.12.18",
+    "gulp": "^4.0.0",
+    "gulp-install": "^1.1.0",
     "prettier": "1.16.1",
     "ts-node": "7.0.1",
     "tslint": "^5.12.1",
-    "typescript": "2.7.2"
+    "typescript": "^3.2.4"
   }
 }
