@@ -74,6 +74,7 @@ export class TemperatureRepository extends EventEmitter {
             average: average(valuesWithinRange),
             numberExcluded,
             rawValues: valuesWithinRange,
+            stdErr,
         } as TemperatureSet;
     }
 
