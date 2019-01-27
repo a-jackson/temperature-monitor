@@ -1,18 +1,22 @@
-import { injectable } from 'inversify';
 import { getSensor, getSensorsUids, Sensor } from 'w1temp';
 
 export interface Temperatures {
     getSensors(): Promise<string[]>;
-    getSensor(sensor: string): Promise<Sensor>;
+    getSensor(sensor: string): Promise<NamedSensor>;
 }
 
-@injectable()
+export interface NamedSensor extends Sensor {
+    name: string;
+}
+
 export class TemperatureService implements Temperatures {
     public getSensors() {
         return getSensorsUids();
     }
 
-    public getSensor(sensor: string) {
-        return getSensor(sensor, false);
+    public async getSensor(sensorName: string) {
+        const sensor = (await getSensor(sensorName)) as NamedSensor;
+        sensor.name = sensorName;
+        return sensor;
     }
 }
