@@ -1,18 +1,21 @@
 import { EventEmitter } from 'events';
+import { TemperatureConfig } from '../models/configuration';
 import { TemperatureSet } from '../models/temperature-set';
 import { average, standardError } from '../utils/maths';
 import { NamedSensor, Temperatures } from './temperatures';
 
 export class TemperatureRepository extends EventEmitter {
-    private readonly temperatureDeadband = 0.5;
-    private readonly maxReadingAge = 5 * 60 * 1000; // 5 minutes
+    private readonly temperatureDeadband: number;
+    private readonly maxReadingAge: number;
     private sensors: NamedSensor[];
     private currentValues: { [name: string]: { time: Date; temp: number } };
 
-    constructor(private temperatures: Temperatures) {
+    constructor(private temperatures: Temperatures, config: TemperatureConfig) {
         super();
         this.sensors = [];
         this.currentValues = {};
+        this.temperatureDeadband = config.temperatureDeadband;
+        this.maxReadingAge = config.maxReadingAge;
     }
 
     public async init() {
