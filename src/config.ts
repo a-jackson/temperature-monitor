@@ -21,8 +21,8 @@ export class Config {
                 const configString = await this.readConfigFile();
                 config = JSON.parse(configString);
             }
-        } catch (err) { 
-            console.log("Failed to load config file: " + err);
+        } catch (err) {
+            console.log('Failed to load config file: ' + err);
             process.exit(1);
         }
 

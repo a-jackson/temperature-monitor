@@ -22,6 +22,10 @@ export class TemperatureRepository extends EventEmitter {
         const sensorNames = await this.temperatures.getSensors();
         for (const sensorName of sensorNames) {
             const sensor = await this.temperatures.getSensor(sensorName);
+            if (!sensor) {
+                continue;
+            }
+
             sensor.on('change', newTemp =>
                 this.temperatureChanged(sensorName, newTemp),
             );
@@ -76,8 +80,11 @@ export class TemperatureRepository extends EventEmitter {
         return {
             average: average(valuesWithinRange),
             numberExcluded,
-            rawValues: valuesWithinRange,
+            rawValues: Object.keys(this.currentValues).map(
+                x => this.currentValues[x].temp,
+            ),
             stdErr,
+            usedValues: valuesWithinRange,
         } as TemperatureSet;
     }
 

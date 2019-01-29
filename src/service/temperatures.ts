@@ -15,8 +15,12 @@ export class TemperatureService implements Temperatures {
     }
 
     public async getSensor(sensorName: string) {
-        const sensor = (await getSensor(sensorName)) as NamedSensor;
-        sensor.name = sensorName;
-        return sensor;
+        try {
+            const sensor = (await getSensor(sensorName)) as NamedSensor;
+            sensor.name = sensorName;
+            return sensor;
+        } catch {
+            return undefined;
+        }
     }
 }
