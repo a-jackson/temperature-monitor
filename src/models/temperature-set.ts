@@ -1,7 +1,5 @@
 export interface TemperatureSet {
-    rawValues: number[];
-    usedValues: number[];
     numberExcluded: number;
-    average: number;
+    avg: number;
     stdErr: number;
 }

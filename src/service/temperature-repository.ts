@@ -68,23 +68,15 @@ export class TemperatureRepository extends EventEmitter {
             }
         }
 
-        let numberExcluded = this.sensors.length - valuesWithinTimeRange.length;
+        const numberExcluded =
+            this.sensors.length - valuesWithinTimeRange.length;
         const stdErr = standardError(valuesWithinTimeRange);
-        const mean = average(valuesWithinTimeRange);
-        const valuesWithinRange = valuesWithinTimeRange.filter(
-            value => value < mean + stdErr && value > mean - stdErr,
-        );
-        numberExcluded +=
-            valuesWithinTimeRange.length - valuesWithinRange.length;
+        const avg = average(valuesWithinTimeRange);
 
         return {
-            average: average(valuesWithinRange),
+            avg,
             numberExcluded,
-            rawValues: Object.keys(this.currentValues).map(
-                x => this.currentValues[x].temp,
-            ),
             stdErr,
-            usedValues: valuesWithinRange,
         } as TemperatureSet;
     }
 
