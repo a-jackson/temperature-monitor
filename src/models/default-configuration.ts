@@ -1,14 +1,9 @@
 import * as os from 'os';
 import { Configuration } from './configuration';
 
-const defaultConfig: Configuration = {
-    database: {
-        host: 'pi.hole',
-        name: 'sensors',
-    },
+const defaultConfig: Partial<Configuration> = {
     host: {
         hostName: os.hostname(),
-        location: undefined,
     },
     temp: {
         maxReadingAge: 60000,

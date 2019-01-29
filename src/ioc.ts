@@ -1,5 +1,6 @@
 import { App } from './app';
 import { Config } from './config';
+import { DatabaseService } from './service/database';
 import { MockTemperatureService } from './service/mock-temperatures';
 import { TemperatureRepository } from './service/temperature-repository';
 import { Temperatures, TemperatureService } from './service/temperatures';
@@ -19,7 +20,8 @@ export class Ioc {
             temperatures,
             config.config.temp,
         );
-        const app = new App(temperatureRepository);
+        const database = new DatabaseService(config.config.database, config.config.host);
+        const app = new App(temperatureRepository, database);
 
         return app;
     }

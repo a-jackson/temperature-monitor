@@ -10,11 +10,12 @@ export interface TemperatureConfig {
 }
 
 export interface HostConfig {
-    location: string;
+    location?: string;
     hostName: string;
 }
 
 export interface DatabaseConfig {
     host: string;
     name: string;
+    measurement: string;
 }

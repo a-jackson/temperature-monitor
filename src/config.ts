@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as _ from 'lodash';
 import * as path from 'path';
 import { Configuration } from './models/configuration';
 import defaultConfig from './models/default-configuration';
@@ -26,7 +27,7 @@ export class Config {
             process.exit(1);
         }
 
-        this.loadedConfig = Object.assign(
+        this.loadedConfig = _.merge(
             config,
             defaultConfig,
         ) as Configuration;

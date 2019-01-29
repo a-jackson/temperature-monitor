@@ -74,7 +74,7 @@ export class TemperatureRepository extends EventEmitter {
         const avg = average(valuesWithinTimeRange);
 
         return {
-            avg,
+            average: avg,
             numberExcluded,
             stdErr,
         } as TemperatureSet;
