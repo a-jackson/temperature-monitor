@@ -16,9 +16,14 @@ export class Config {
 
     public async loadConfig() {
         let config: Partial<Configuration> = {};
-        if (await this.configFileExists) {
-            const configString = await this.readConfigFile();
-            config = JSON.parse(configString);
+        try {
+            if (await this.configFileExists()) {
+                const configString = await this.readConfigFile();
+                config = JSON.parse(configString);
+            }
+        } catch (err) { 
+            console.log("Failed to load config file: " + err);
+            process.exit(1);
         }
 
         this.loadedConfig = Object.assign(
