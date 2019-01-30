@@ -49,26 +49,16 @@ export class TemperatureRepository extends EventEmitter {
                 !this.isWithinTimeDeadband(temperatureSet)
             ) {
                 this.emit('change', temperatureSet);
+                this.currentTemperatureSet = temperatureSet;
             }
         }
     }
 
     private createNewTemperatureSet(now: Date) {
-        const valuesWithinTimeRange: number[] = [];
-        for (const sensor of this.sensors) {
-            const currentValue = this.currentValues[sensor.name];
-            if (
-                now.getTime() - currentValue.time.getTime() <
-                this.maxReadingAge
-            ) {
-                valuesWithinTimeRange.push(currentValue.temp);
-            }
-        }
-
-        const numberExcluded =
-            this.sensors.length - valuesWithinTimeRange.length;
-        const stdErr = standardError(valuesWithinTimeRange);
-        const avg = average(valuesWithinTimeRange);
+        const values = this.sensors.map(x => this.currentValues[x.name].temp);
+        const numberExcluded = 0;
+        const stdErr = standardError(values);
+        const avg = average(values);
 
         return {
             average: avg,

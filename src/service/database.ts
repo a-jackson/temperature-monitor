@@ -39,7 +39,9 @@ export class DatabaseService {
 
     public async writeTemperatureSet(temperatureSet: TemperatureSet) {
         try {
-            await this.influx.writePoints([this.getPoint(temperatureSet)]);
+            const point = this.getPoint(temperatureSet);
+            await this.influx.writePoints([point]);
+            console.log(point);
         } catch (err) {
             console.log('Failed to write to database: ' + err);
         }
