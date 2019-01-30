@@ -20,7 +20,10 @@ export class Ioc {
             temperatures,
             config.config.temp,
         );
-        const database = new DatabaseService(config.config.database, config.config.host);
+        const database = new DatabaseService(
+            config.config.database,
+            config.config.host,
+        );
         const app = new App(temperatureRepository, database);
 
         return app;

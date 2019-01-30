@@ -27,10 +27,7 @@ export class Config {
             process.exit(1);
         }
 
-        this.loadedConfig = _.merge(
-            config,
-            defaultConfig,
-        ) as Configuration;
+        this.loadedConfig = _.merge(config, defaultConfig) as Configuration;
     }
 
     public get config() {
@@ -38,7 +35,7 @@ export class Config {
     }
 
     private configFileExists() {
-        return new Promise<boolean>((resolve, _) =>
+        return new Promise<boolean>(resolve =>
             fs.exists(this.configFilePath, resolve),
         );
     }

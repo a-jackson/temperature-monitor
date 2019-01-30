@@ -9,6 +9,7 @@ export class TemperatureRepository extends EventEmitter {
     private readonly maxReadingAge: number;
     private sensors: NamedSensor[];
     private currentValues: { [name: string]: { time: Date; temp: number } };
+    private currentTemperatureSet: TemperatureSet;
 
     constructor(private temperatures: Temperatures, config: TemperatureConfig) {
         super();
@@ -40,19 +41,15 @@ export class TemperatureRepository extends EventEmitter {
 
         const now = new Date();
 
-        if (this.currentValues[sensorName]) {
-            if (
-                this.isWithinValueDeadband(sensorName, newTemp) &&
-                this.isWithinTimeDeadband(sensorName, now)
-            ) {
-                return;
-            }
-        }
-
         this.currentValues[sensorName] = { time: now, temp: newTemp };
         if (this.allSensorsHaveValue()) {
             const temperatureSet = this.createNewTemperatureSet(now);
-            this.emit('change', temperatureSet);
+            if (
+                !this.isWithinValueDeadband(temperatureSet) ||
+                !this.isWithinTimeDeadband(temperatureSet)
+            ) {
+                this.emit('change', temperatureSet);
+            }
         }
     }
 
@@ -77,19 +74,21 @@ export class TemperatureRepository extends EventEmitter {
             average: avg,
             numberExcluded,
             stdErr,
+            time: now,
         } as TemperatureSet;
     }
 
-    private isWithinValueDeadband(sensorName: string, newTemp: number) {
+    private isWithinValueDeadband(newTemperatureSet: TemperatureSet) {
         const difference = Math.abs(
-            this.currentValues[sensorName].temp - newTemp,
+            this.currentTemperatureSet.average - newTemperatureSet.average,
         );
         return difference < this.temperatureDeadband;
     }
 
-    private isWithinTimeDeadband(sensorName: string, now: Date) {
+    private isWithinTimeDeadband(newTemperatureSet: TemperatureSet) {
         return (
-            now.getTime() - this.currentValues[sensorName].time.getTime() <
+            newTemperatureSet.time.getTime() -
+                this.currentTemperatureSet.time.getTime() <
             this.maxReadingAge
         );
     }
