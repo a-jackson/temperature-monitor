@@ -47,7 +47,11 @@ export class DatabaseService {
 
     private getPoint(temperatureSet: TemperatureSet): IPoint {
         return {
-            fields: temperatureSet,
+            fields: {
+                average: temperatureSet.average,
+                numberExcluded: temperatureSet.numberExcluded,
+                stdErr: temperatureSet.stdErr,
+            },
             measurement: this.dbConfig.measurement,
             tags: {
                 host: this.hostConfig.hostName,

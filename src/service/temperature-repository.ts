@@ -79,6 +79,9 @@ export class TemperatureRepository extends EventEmitter {
     }
 
     private isWithinValueDeadband(newTemperatureSet: TemperatureSet) {
+        if (!this.currentTemperatureSet) {
+            return false;
+        }
         const difference = Math.abs(
             this.currentTemperatureSet.average - newTemperatureSet.average,
         );
@@ -86,6 +89,9 @@ export class TemperatureRepository extends EventEmitter {
     }
 
     private isWithinTimeDeadband(newTemperatureSet: TemperatureSet) {
+        if (!this.currentTemperatureSet) {
+            return false;
+        }
         return (
             newTemperatureSet.time.getTime() -
                 this.currentTemperatureSet.time.getTime() <
