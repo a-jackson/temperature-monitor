@@ -12,6 +12,10 @@ export class App {
             'change',
             async x => await this.database.writeTemperatureSet(x),
         );
+        this.temperatureRepository.on(
+            'rawchange',
+            async x => await this.database.writeRawTemperature(x),
+        );
         await this.temperatureRepository.init();
     }
 }

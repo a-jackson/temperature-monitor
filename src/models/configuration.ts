@@ -18,4 +18,5 @@ export interface DatabaseConfig {
     host: string;
     name: string;
     measurement: string;
+    rawMeasurement: string;
 }

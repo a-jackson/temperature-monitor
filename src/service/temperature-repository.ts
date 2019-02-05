@@ -49,6 +49,7 @@ export class TemperatureRepository extends EventEmitter {
                 !this.isWithinTimeDeadband(temperatureSet)
             ) {
                 this.emit('change', temperatureSet);
+                this.emit('rawchange', { sensorName, temp: newTemp });
                 this.currentTemperatureSet = temperatureSet;
             }
         }
