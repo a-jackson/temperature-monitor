@@ -5,7 +5,7 @@ import { TemperatureSet } from '../models/temperature-set';
 
 interface TemperatureSchema {
     fields: {
-        average: FieldType;
+        value: FieldType;
         numberExcluded: FieldType;
         stdErr: FieldType;
     };
@@ -31,9 +31,9 @@ export class DatabaseService {
     public init() {
         const schema: TemperatureSchema = {
             fields: {
-                average: FieldType.FLOAT,
                 numberExcluded: FieldType.INTEGER,
                 stdErr: FieldType.FLOAT,
+                value: FieldType.FLOAT,
             },
             measurement: this.dbConfig.measurement,
             tags: ['host', 'location'],
@@ -73,9 +73,9 @@ export class DatabaseService {
     private getPoint(temperatureSet: TemperatureSet): IPoint {
         return {
             fields: {
-                average: temperatureSet.average,
                 numberExcluded: temperatureSet.numberExcluded,
                 stdErr: temperatureSet.stdErr,
+                value: temperatureSet.average,
             },
             measurement: this.dbConfig.measurement,
             tags: {
