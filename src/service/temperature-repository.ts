@@ -36,27 +36,27 @@ export class TemperatureRepository extends EventEmitter {
 
     private temperatureChanged(sensorName: string, newTemp: number | false) {
         if (!newTemp) {
-            newTemp = 0;
+            return;
         }
 
         this.emit('rawchange', { sensorName, temp: newTemp });
         const now = new Date();
 
         this.currentValues[sensorName] = { time: now, temp: newTemp };
-        if (this.allSensorsHaveValue()) {
-            const temperatureSet = this.createNewTemperatureSet(now);
-            if (
-                !this.isWithinValueDeadband(temperatureSet) ||
-                !this.isWithinTimeDeadband(temperatureSet)
-            ) {
-                this.emit('change', temperatureSet);
-                this.currentTemperatureSet = temperatureSet;
-            }
+        const temperatureSet = this.createNewTemperatureSet(now);
+        if (
+            !this.isWithinValueDeadband(temperatureSet) ||
+            !this.isWithinTimeDeadband(temperatureSet)
+        ) {
+            this.emit('change', temperatureSet);
+            this.currentTemperatureSet = temperatureSet;
         }
     }
 
     private createNewTemperatureSet(now: Date) {
-        const values = this.sensors.map(x => this.currentValues[x.name].temp);
+        const values = this.sensors
+            .filter(x => this.currentValues[x.name])
+            .map(x => this.currentValues[x.name].temp);
         const numberExcluded = 0;
         const stdErr = standardError(values);
         const avg = average(values);
@@ -88,15 +88,5 @@ export class TemperatureRepository extends EventEmitter {
                 this.currentTemperatureSet.time.getTime() <
             this.maxReadingAge
         );
-    }
-
-    private allSensorsHaveValue() {
-        for (const sensor of this.sensors) {
-            if (!this.currentValues[sensor.name]) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
