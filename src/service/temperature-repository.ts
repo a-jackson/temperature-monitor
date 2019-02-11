@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { TemperatureConfig } from '../models/configuration';
+import { RawTemperature } from '../models/raw-temperature';
 import { TemperatureSet } from '../models/temperature-set';
 import { average, standardError } from '../utils/maths';
 import { NamedSensor, Temperatures } from './temperatures';
@@ -39,8 +40,12 @@ export class TemperatureRepository extends EventEmitter {
             return;
         }
 
-        this.emit('rawchange', { sensorName, temp: newTemp });
         const now = new Date();
+        this.emit('rawchange', {
+            sensorName,
+            temp: newTemp,
+            time: now,
+        } as RawTemperature);
 
         this.currentValues[sensorName] = { time: now, temp: newTemp };
         const temperatureSet = this.createNewTemperatureSet(now);

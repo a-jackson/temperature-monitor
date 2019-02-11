@@ -23,10 +23,14 @@ interface RawTemperatureSchema {
 
 export class DatabaseService {
     private influx: InfluxDB;
+    private pointsToWrite: IPoint[];
+
     constructor(
         private dbConfig: DatabaseConfig,
         private hostConfig: HostConfig,
-    ) {}
+    ) {
+        this.pointsToWrite = [];
+    }
 
     public init() {
         const schema: TemperatureSchema = {
@@ -62,11 +66,13 @@ export class DatabaseService {
     }
 
     private async write(point: IPoint) {
+        this.pointsToWrite.push(point);
         try {
-            await this.influx.writePoints([point]);
-            console.log(point);
+            await this.influx.writePoints(this.pointsToWrite);
+            this.pointsToWrite.length = 0;
         } catch (err) {
             console.log('Failed to write to database: ' + err);
+            console.log('Point saved for attempting on next write');
         }
     }
 
@@ -82,6 +88,7 @@ export class DatabaseService {
                 host: this.hostConfig.hostName,
                 location: this.hostConfig.location,
             },
+            timestamp: temperatureSet.time,
         };
     }
 
@@ -96,6 +103,7 @@ export class DatabaseService {
                 location: this.hostConfig.location,
                 name: temperature.sensorName,
             },
+            timestamp: temperature.time,
         };
     }
 }
